@@ -11,7 +11,7 @@ stdout.write('Добрый день! Введите, пожалуйста, те�
 const end = () => {
   stdout.write('Всего доброго!');
   exit();
-}
+};
 
 input.on('line', (text) => {
   if (text === 'exit') end();
