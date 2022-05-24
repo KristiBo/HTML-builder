@@ -17,6 +17,8 @@ async function createDist() {
 
   copyFolder(assetsFolder, assetsCopyFolder);
 
+  bundleHtml();
+
   bundleStyles();
 }
 
@@ -47,12 +49,27 @@ async function copyFolder(folder, copy) {
 
   } catch (error) {
     console.error('Error');
-  }  
+  }
 }
 
-function bundleHtml() {
-  const readHtml = fs.createReadStream(templateFile);
-  const writeHtml = fs.createWriteStream(htmlFile);
+async function bundleHtml() {
+  try {    
+    const files = await fsPromises.readdir(componentsFolder, { withFileTypes: true });
+    const readTemplate = fs.createReadStream(templateFile, 'utf-8');
+
+    readTemplate.on('data', async (str) => {
+      for (let file of files) {    
+        const name = path.parse(file.name).name;
+        const componentsFile = path.join(componentsFolder, file.name);
+        const readComponents = await fsPromises.readFile(componentsFile, 'utf-8'); 
+        str = str.replace(`{{${name}}}`, readComponents);
+      }
+      await fsPromises.writeFile(htmlFile, str);
+    });
+
+  } catch (error) {
+    console.error('Error');
+  }
 }
 
 function bundleStyles() {
