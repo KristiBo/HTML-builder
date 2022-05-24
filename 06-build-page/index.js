@@ -25,7 +25,7 @@ async function createDist() {
 try {
   createDist();
 } catch (error) {
-  console.error('Error');
+  console.error(error.message);
 }
 
 async function copyFolder(folder, copy) {
@@ -48,7 +48,8 @@ async function copyFolder(folder, copy) {
     }
 
   } catch (error) {
-    console.error('Error');
+    console.error(error.message);
+    return;
   }
 }
 
@@ -62,19 +63,23 @@ async function bundleHtml() {
         const name = path.parse(file.name).name;
         const componentsFile = path.join(componentsFolder, file.name);
         const readComponents = await fsPromises.readFile(componentsFile, 'utf-8'); 
-        str = str.replace(`{{${name}}}`, readComponents);
+        str = str.replaceAll(`{{${name}}}`, readComponents);
       }
       await fsPromises.writeFile(htmlFile, str);
     });
 
   } catch (error) {
-    console.error('Error');
+    console.error(error.message);
+    return;
   }
 }
 
 function bundleStyles() {
   fs.readdir(stylesFolder, { withFileTypes: true }, (error, files) => {
-    if (error) console.error('Error');
+    if (error) {
+      console.error(error.message);
+      return;
+    }
 
     const writeStream = fs.createWriteStream(stylesFile);
 

@@ -4,7 +4,10 @@ const pathFolder = path.join(__dirname, 'styles');
 const bundleFile = path.join(__dirname, 'project-dist', 'bundle.css');
 
 fs.readdir(pathFolder, { withFileTypes: true }, (error, files) => {
-  if (error) console.error('Error');
+  if (error) {
+    console.error(error.message);
+    return;
+  }
 
   const writeStream = fs.createWriteStream(bundleFile);
   

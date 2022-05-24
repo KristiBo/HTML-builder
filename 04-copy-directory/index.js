@@ -20,5 +20,5 @@ async function copyFolder() {
 try {
   copyFolder();
 } catch (error) {
-  console.error('Error');
+  console.error(error.message);
 }
