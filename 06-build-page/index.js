@@ -56,9 +56,8 @@ async function copyFolder(folder, copy) {
 async function bundleHtml() {
   try {    
     const files = await fsPromises.readdir(componentsFolder, { withFileTypes: true });
-    const readTemplate = fs.createReadStream(templateFile, 'utf-8');
 
-    readTemplate.on('data', async (str) => {
+    await fsPromises.readFile(templateFile, 'utf-8').then(async (str) => {
       for (let file of files) {    
         const name = path.parse(file.name).name;
         const componentsFile = path.join(componentsFolder, file.name);
